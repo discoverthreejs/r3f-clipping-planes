@@ -47,35 +47,35 @@ export default function Scene() {
       min: -1.5,
       max: 1.5,
       step: 0.1,
-      onChange: (v) => (planes[0].constant = v)
+      onChange: (v) => (planes[0].constant = v),
     },
     yPlanePosition: {
       value: 0.0,
       min: -1.5,
       max: 1.5,
       step: 0.1,
-      onChange: (v) => (planes[1].constant = v)
+      onChange: (v) => (planes[1].constant = v),
     },
     zPlanePosition: {
       value: 0.0,
       min: -1.5,
       max: 1.5,
       step: 0.1,
-      onChange: (v) => (planes[2].constant = v)
-    }
+      onChange: (v) => (planes[2].constant = v),
+    },
   });
   const [planes] = useState(() => [
     new THREE.Plane(new THREE.Vector3(-1, 0, 0), xPlanePosition),
     // new THREE.Plane(new THREE.Vector3(1, 0, 0), 0.5)
     new THREE.Plane(new THREE.Vector3(0, -1, 0), yPlanePosition),
     // new THREE.Plane(new THREE.Vector3(0, 1, 0), 1),
-    new THREE.Plane(new THREE.Vector3(0, 0, -1), zPlanePosition)
+    new THREE.Plane(new THREE.Vector3(0, 0, -1), zPlanePosition),
     // new THREE.Plane(new THREE.Vector3(0, 0, 1), 1)
   ]);
   const [planeObjects] = useState(() => [
     createRef(),
     createRef(),
-    createRef()
+    createRef(),
     // createRef(),
     // createRef(),
     // createRef(),
@@ -96,6 +96,8 @@ export default function Scene() {
     });
   });
   const boxArgs = [2, 1, 1];
+  const box2Args = [1, 1, 2];
+
   return (
     <group>
       <group>
@@ -111,6 +113,22 @@ export default function Scene() {
         {planes.map((plane, i) => (
           <PlaneStencilGroup
             geometry={new THREE.BoxBufferGeometry(...boxArgs)}
+            plane={plane}
+            renderOrder={i + 1}
+          />
+        ))}
+        <Box args={box2Args}>
+          <meshLambertMaterial
+            color={"green"}
+            metalness={0.1}
+            roughness={0.75}
+            clippingPlanes={planes}
+            side={THREE.DoubleSide}
+          />
+        </Box>
+        {planes.map((plane, i) => (
+          <PlaneStencilGroup
+            geometry={new THREE.BoxBufferGeometry(...box2Args)}
             plane={plane}
             renderOrder={i + 1}
           />
